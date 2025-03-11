@@ -63,13 +63,12 @@ class Resblock(nn.Module):
         self.conv21 = nn.Conv2d(in_channels=channel, out_channels=channel, padding=1, kernel_size=3, stride=1,
                                 bias=True)
         self.relu = nn.ReLU(
-            inplace=True)  # 参数 inplace=True 是在实例化 ReLU 激活函数时的一个可选参数。当设置为 True 时，表示原地（in-place）操作，即将激活函数的计算直接应用于输入张量上，而不会创建新的张量。这样可以节省内存空间，但会修改输入张量的值。
-
+            inplace=True) 
     def forward(self, x):
         rs1 = self.relu(self.conv20(x))
-        rs2 = self.conv21(rs1)  # 最后一个不用激活函数？
+        rs2 = self.conv21(rs1)  
         # print(f"rs2:{rs2.shape},x:{x.shape}")
-        rs = torch.add(x, rs2)  # 用torch加一下
+        rs = torch.add(x, rs2) 
         return rs
 
 
@@ -110,8 +109,7 @@ class SSA(nn.Module):
         # print(pan_matrix.shape)
         pan_matrix = pan_matrix.permute(0, 1, 3, 2)
         pan_matrix = pan_matrix.contiguous().view(b, c, -1)
-        # 特征矩阵使用了转置
-
+       
         pan_matrix = F.softmax(pan_matrix, dim=-1)
         # print(pan_matrix.shape)
 
@@ -250,7 +248,7 @@ class PansharpeningNet(nn.Module):
         self.convnum3tn64 = nn.Conv2d(in_channels=channels * 3, out_channels=64, kernel_size=3, stride=1, padding=1,
                                       bias=True)
 
-        self.group_size = 6  # 每组6个通道
+        self.group_size = 6 
         self.channels = channels
         self.cov2t64 = nn.Conv2d(in_channels=2 + channels, out_channels=64, kernel_size=3, stride=1, padding=1,
                                  bias=True)
